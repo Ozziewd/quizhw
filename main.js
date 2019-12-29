@@ -1,10 +1,11 @@
 var startBtn = document.getElementById("startB");
 var questionHeading = document.getElementById("questions");
-var answerslist = document.getElementById("answers");
+var answersList = document.getElementById("answers");
 var timeDom = document.getElementById('timer');
 var count = 0
 var timeInterval
 var timeLeft = questions.length * 15;
+
 const timed = () => {
 
     timeInterval = setInterval(function () {
@@ -44,7 +45,7 @@ var check = guess => {
         console.log('you are wrong')
     }
     count++
-    if (questions.length === count) {
+    if (questions.length-1 === count) {
         clearInterval(timeInterval)
         console.log('game over')
         endGame()
@@ -53,7 +54,24 @@ var check = guess => {
         printButtons()
     }
 }
+const saveScores=(intials)=>{
+    const storedScores = JSON.parse(localStorage.getItem('scores'))
+    if(storedScores === null)localStorage.setItem("scores", JSON.stringify([{score: timeLeft, intials: intials}]))
+    else{
+        storedScores.push({score: timeLeft, intials: intials})
+        localStorage.setItem('scores', JSON.stringify(storedScores))
+    }
+    window.location.href = "./score.html"
+}
 const endGame = () => {
     questionHeading.innerHTML = '<h1> Game Over!</h1>'
-    answersList.innerHTML = '<input> Initials here'
+    answersList.innerHTML = 'Initials here: <input id="actIntials"></input><button id="intials">submit</button>'
+    var subBttn = document.getElementById("intials")
+    subBttn.addEventListener("click", function (event) {
+        var intials = document.getElementById("actIntials").value
+        console.log(intials)
+        saveScores(intials)
+    }
+    )
 }
+
